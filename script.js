@@ -122,7 +122,7 @@ function createUnite(uniteIndex, container) {
             </div>
             
             <div class="form-group">
-                <label for="unite_${uniteIndex}_duree">Durée de l'unité (en heures)</label>
+                <label for="unite_${uniteIndex}_duree">Durée de l'unité (en minute)</label>
                 <input <input type="number" id="unite_${uniteIndex}_duree" name="unite_${uniteIndex}_duree" data-type="unite-duree" min="0" step="0.01" readonly style="background-color: #f0f0f0; cursor: not-allowed;" value="0"/>
                 <div class="help-text">Calculée automatiquement</div>
             </div>
@@ -209,26 +209,27 @@ function createModule(uniteIndex, moduleIndex, container) {
 }
 
 // Fonction pour calculer la durée d'une unité
+
 function calculateUniteDuration(uniteIndex) {
     const modulesContainer = document.getElementById(`modulesContainer_${uniteIndex}`);
-    const modulesDuree = modulesContainer.querySelectorAll('input[type="number"][name*="_duree"]');
-    
+    const modulesDuree = modulesContainer.querySelectorAll(
+        'input[name*="_module_"][name*="_duree"]'
+    );
+
     let totalMinutes = 0;
+
     modulesDuree.forEach(input => {
-        const value = parseInt(input.value) || 0;
-        totalMinutes += value;
+        const value = parseInt(input.value, 10);
+        if (!isNaN(value)) {
+            totalMinutes += value;
+        }
     });
-    
-    // Convertir en heures
-    const totalHours = (totalMinutes / 60).toFixed(2);
-    
-    // Mettre à jour le champ durée de l'unité
+
     const uniteDureeInput = document.getElementById(`unite_${uniteIndex}_duree`);
     if (uniteDureeInput) {
-        uniteDureeInput.value = totalHours;
+        uniteDureeInput.value = totalMinutes;
     }
-    
-    // Recalculer la durée totale
+
     calculateTotalDuration();
 }
 
@@ -344,6 +345,7 @@ function showResult(message, isSuccess) {
         }, 2000);
     }
 }
+
 
 
 
