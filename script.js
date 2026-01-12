@@ -26,6 +26,7 @@ document.getElementById('pedagogicalForm').addEventListener('submit', function(e
     unitesElements.forEach((uniteEl, uniteIndex) => {
         const uniteTitre = uniteEl.querySelector(`input[name="unite_${uniteIndex}_titre"]`).value;
         const uniteFormat = uniteEl.querySelector(`select[name="unite_${uniteIndex}_format"]`).value;
+        const uniteDuree = uniteEl.querySelector(`input[name="unite_${uniteIndex}_duree"]`).value;
         const modules = [];
         
         const modulesElements = uniteEl.querySelectorAll('.module-block');
@@ -42,6 +43,7 @@ document.getElementById('pedagogicalForm').addEventListener('submit', function(e
         unites.push({
             titre: uniteTitre,
             format: uniteFormat,
+            duree: uniteDuree,
             modules: modules
         });
     });
@@ -101,14 +103,22 @@ function createUnite(uniteIndex, container) {
             <input type="text" id="unite_${uniteIndex}_titre" name="unite_${uniteIndex}_titre" required placeholder="Ex: Introduction aux urgences cardiaques">
         </div>
         
-        <div class="form-group">
-            <label for="unite_${uniteIndex}_format">Format de l'unité <span class="required">*</span></label>
-            <select id="unite_${uniteIndex}_format" name="unite_${uniteIndex}_format" required>
-                <option value="">-- Sélectionnez un format --</option>
-                <option value="presentiel">🏢 Présentiel</option>
-                <option value="distanciel">💻 Distanciel</option>
-                <option value="mixte">🔄 Mixte</option>
-            </select>
+        <div class="two-columns">
+            <div class="form-group">
+                <label for="unite_${uniteIndex}_format">Format de l'unité <span class="required">*</span></label>
+                <select id="unite_${uniteIndex}_format" name="unite_${uniteIndex}_format" required>
+                    <option value="">-- Sélectionnez un format --</option>
+                    <option value="presentiel">🏢 Présentiel</option>
+                    <option value="distanciel">💻 Distanciel</option>
+                    <option value="mixte">🔄 Mixte</option>
+                </select>
+            </div>
+            
+            <div class="form-group">
+                <label for="unite_${uniteIndex}_duree">Durée de l'unité (en heures)</label>
+                <input type="number" id="unite_${uniteIndex}_duree" name="unite_${uniteIndex}_duree" min="0" step="0.01" readonly style="background-color: #f0f0f0; cursor: not-allowed;" value="0">
+                <div class="help-text">Calculée automatiquement</div>
+            </div>
         </div>
         
         <div class="form-group">
@@ -130,6 +140,7 @@ function removeUnite(btn) {
         setTimeout(() => {
             uniteBlock.remove();
             renumberUnites();
+            calculateTotalDuration();
         }, 300);
     }
 }
@@ -171,7 +182,7 @@ function createModule(uniteIndex, moduleIndex, container) {
     moduleBlock.innerHTML = `
         <div class="module-header">
             Module ${moduleIndex + 1}
-            ${moduleIndex > 0 ? `<button type="button" class="btn-remove-module" onclick="removeModule(this)">✕ Supprimer</button>` : ''}
+            ${moduleIndex > 0 ? `<button type="button" class="btn-remove-module" onclick="removeModule(this, ${uniteIndex})">✕ Supprimer</button>` : ''}
         </div>
         
         <div class="two-columns">
@@ -182,12 +193,54 @@ function createModule(uniteIndex, moduleIndex, container) {
             
             <div class="form-group">
                 <label for="unite_${uniteIndex}_module_${moduleIndex}_duree">Durée (en minutes) <span class="required">*</span></label>
-                <input type="number" id="unite_${uniteIndex}_module_${moduleIndex}_duree" name="unite_${uniteIndex}_module_${moduleIndex}_duree" min="5" step="5" required placeholder="Ex: 30">
+                <input type="number" id="unite_${uniteIndex}_module_${moduleIndex}_duree" name="unite_${uniteIndex}_module_${moduleIndex}_duree" min="5" step="5" required placeholder="Ex: 30" onchange="calculateUniteDuration(${uniteIndex})">
             </div>
         </div>
     `;
     
     container.appendChild(moduleBlock);
+}
+
+// Fonction pour calculer la durée d'une unité
+function calculateUniteDuration(uniteIndex) {
+    const modulesContainer = document.getElementById(`modulesContainer_${uniteIndex}`);
+    const modulesDuree = modulesContainer.querySelectorAll('input[type="number"][name*="_duree"]');
+    
+    let totalMinutes = 0;
+    modulesDuree.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        totalMinutes += value;
+    });
+    
+    // Convertir en heures
+    const totalHours = (totalMinutes / 60).toFixed(2);
+    
+    // Mettre à jour le champ durée de l'unité
+    const uniteDureeInput = document.getElementById(`unite_${uniteIndex}_duree`);
+    if (uniteDureeInput) {
+        uniteDureeInput.value = totalHours;
+    }
+    
+    // Recalculer la durée totale
+    calculateTotalDuration();
+}
+
+// Fonction pour calculer la durée totale de la formation
+function calculateTotalDuration() {
+    const unitesContainer = document.getElementById('unitesContainer');
+    const unitesDuree = unitesContainer.querySelectorAll('input[id*="unite_"][id*="_duree"]');
+    
+    let totalHours = 0;
+    unitesDuree.forEach(input => {
+        const value = parseFloat(input.value) || 0;
+        totalHours += value;
+    });
+    
+    // Mettre à jour le champ durée totale
+    const dureeTotaleInput = document.getElementById('duree');
+    if (dureeTotaleInput) {
+        dureeTotaleInput.value = totalHours.toFixed(2);
+    }
 }
 
 function addModule(uniteIndex) {
@@ -211,9 +264,10 @@ function addModule(uniteIndex) {
     container.appendChild(newAddBtn);
 }
 
-function removeModule(btn) {
+function removeModule(btn, uniteIndex) {
     if (confirm('Êtes-vous sûr de vouloir supprimer ce module ?')) {
         btn.closest('.module-block').remove();
+        calculateUniteDuration(uniteIndex);
     }
 }
 
@@ -223,6 +277,9 @@ async function sendToAPI(data) {
         // Remplacez cette URL par votre webhook Make.com
         const webhookURL = 'https://hook.eu2.make.com/neigsfankcqam0rtz7qogp1wf0qmbt1f';
         
+        console.log('📤 Envoi des données vers:', webhookURL);
+        console.log('📦 Données envoyées:', data);
+        
         const response = await fetch(webhookURL, {
             method: 'POST',
             headers: {
@@ -231,14 +288,29 @@ async function sendToAPI(data) {
             body: JSON.stringify(data)
         });
         
+        console.log('📥 Statut de la réponse:', response.status);
+        
         if (response.ok) {
-            showResult('Formulaire soumis avec succès ! Les données ont été transmises.', true);
+            const result = await response.text();
+            console.log('✅ Réponse du serveur:', result);
+            showResult('✅ Formulaire soumis avec succès ! Les données ont été transmises.', true);
         } else {
-            showResult('Erreur lors de l\'envoi. Veuillez réessayer.', false);
+            const errorText = await response.text();
+            console.error('❌ Erreur du serveur:', errorText);
+            showResult(`❌ Erreur ${response.status}: ${errorText || 'Veuillez vérifier votre URL webhook.'}`, false);
         }
     } catch (error) {
+        console.error('❌ Erreur complète:', error);
+        showResult(`❌ Erreur de connexion: ${error.message}. Vérifiez votre URL webhook et votre connexion internet.`, false);
+    }
+}
+        // Ensuite, envoyez le résultat à Make
+        await sendToMake({...data, aiGeneratedContent: aiResponse});
+        
+        showResult('Formulaire traité par l\'IA et envoyé avec succès !', true);
+    } catch (error) {
         console.error('Erreur:', error);
-        showResult('Erreur de connexion. Veuillez réessayer.', false);
+        showResult('Erreur lors du traitement. Veuillez réessayer.', false);
     }
 }
 
@@ -269,6 +341,4 @@ function showResult(message, isSuccess) {
             document.getElementById('pedagogicalForm').reset();
         }, 2000);
     }
-
 }
-
