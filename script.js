@@ -313,15 +313,6 @@ async function sendToAPI(data) {
         showResult(`❌ Erreur de connexion: ${error.message}. Vérifiez votre URL webhook et votre connexion internet.`, false);
     }
 }
-        // Ensuite, envoyez le résultat à Make
-        await sendToMake({...data, aiGeneratedContent: aiResponse});
-        
-        showResult('Formulaire traité par l\'IA et envoyé avec succès !', true);
-    } catch (error) {
-        console.error('Erreur:', error);
-        showResult('Erreur lors du traitement. Veuillez réessayer.', false);
-    }
-}
 
 // Envoi vers Make après traitement IA
 async function sendToMake(data) {
@@ -351,3 +342,4 @@ function showResult(message, isSuccess) {
         }, 2000);
     }
 }
+
