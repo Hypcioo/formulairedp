@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Formulaire Déroulé Pédagogique</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>📋 Déroulé Pédagogique Médical</h1>
+            <p>Formulaire de création et de planification</p>
+        </div>
+
+        <div class="form-content">
+            <form id="pedagogicalForm">
+                <!-- Section 1: Informations générales -->
+                <div class="form-section">
+                    <h2 class="section-title">1. Informations Générales</h2>
+                    
+                    <div class="form-group">
+                        <label for="formateur">Titre de la formation <span class="required">*</span></label>
+                        <input type="text" id="formateur" name="formateur" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="email">Titre de l'action DPC <span class="required">*</span></label>
+                        <input type="email" id="email" name="email" required>
+                    </div>
+
+                    <div class="two-columns">
+                        <div class="form-group">
+                            <label for="format">Format <span class="required">*</span></label>
+                            <input type="text" id="format" name="format" required>
+                        </div>
+
+                        <div class="form-group">
+                            <label for="duree">Durée Total (en heures) <span class="required">*</span></label>
+                            <input type="number" id="duree" name="duree" min="0.5" step="0.5" required>
+                        </div>
+                    <div class="form-group">
+                        <label for="Concepteurs">Concepteurs <span class="required">*</span></label>
+                        <input type="text" id="formateur" name="Concepteurs" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Contenue pédagogiques">Titre de la formation <span class="required">*</span></label>
+                        <input type="text" id="formateur" name="Contenue pédagogiques" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Public visé">Titre de la formation <span class="required">*</span></label>
+                        <input type="text" id="formateur" name="Public visé" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Orientation">Orientation <span class="required">*</span></label>
+                        <input type="text" id="formateur" name="Orientation" required>
+                    </div>
+                    </div>
+                </div>
+
+                <!-- Section 2: Contenu de la formation -->
+                <div class="form-section">
+                    <h2 class="section-title">2. Contenu de la Formation ( Générée par IA )</h2>
+                    
+                    <div class="form-group">
+                        <label for="Justification thématique">Justification de la thématique, du ciblage et du choix de l'orientation </br>
+                            en fonction de l'objectif pédagogique de l'action  <span class="required">*</span></label>
+                        <textarea id="objectifs" name="objectifs" required placeholder="Soyez précis !"></textarea>
+
+                    <div class="form-group"></br>
+                        <label for="Objectifs">Objectifs général <span class="required">*</span></label>
+                        <input type="text" id="titre" name="Obecjtif" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="objectifs spé">Objectifs spécifiques <span class="required">*</span></label>
+                        <textarea id="objectifs" name="objectifs spé" required placeholder="Décrivez les objectifs spécifiques de cette formation"></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="publicCible">Méthode pédagogiques <span class="required">*</span></label>
+                        <input type="text" id = "Méthodes" name="Méthodes pédagogique" required>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="prerequis">Typologie</label>
+                        <input type="text" id="prerequis" name="prerequis">
+                    </div>
+                </div>
+
+                <!-- Section 3: Déroulement -->
+                 <div class="form-section">
+                    <h2 class="section-title">3. Configuration des unités et modules</h2>
+
+                    <!-- Configuration des unités et modules -->
+                    <div class="form-group">
+                        <h3 style="color: #667eea; font-size: 18px; margin-bottom: 15px;">Structure du déroulé pédagogique</h3>
+                        
+                        <div class="two-columns">
+                            <div class="form-group">
+                                <label for="nbUnites">Nombre d'unités <span class="required">*</span></label>
+                                <input type="number" id="nbUnites" name="nbUnites" min="1" max="10" value="1" required>
+                                <div class="help-text">Choisissez le nombre d'unités (1-10)</div>
+                            </div>
+                        </div>
+
+                        <button type="button" id="generateStructure" class="btn-generate">Générer la structure</button>
+                        <button type="button" id="addUnite" class="btn-add-unite" style="display: none;">+ Ajouter une unité</button>
+                    </div>
+
+                    <!-- Conteneur pour les unités dynamiques -->
+                    <div id="unitesContainer"></div>
+
+                <!-- Section 4: Informations complémentaires -->
+                <div class="form-section">
+                    <h2 class="section-title">4. Informations Complémentaires</h2>
+                    
+                    <div class="form-group">
+                        <label for="remarques">Remarques ou informations supplémentaires</label>
+                        <textarea id="remarques" name="remarques" placeholder="Ajoutez toute information pertinente..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="nbParticipants">Nombre de participants prévus</label>
+                        <input type="number" id="nbParticipants" name="nbParticipants" min="1">
+                    </div>
+                </div>
+
+                <div class="btn-container">
+                    <button type="submit" class="btn-submit">Soumettre le formulaire</button>
+                </div>
+            </form>
+
+            <div id="result"></div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
