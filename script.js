@@ -234,21 +234,25 @@ function calculateUniteDuration(uniteIndex) {
 
 // Fonction pour calculer la durée totale de la formation
 function calculateTotalDuration() {
-    const unitesContainer = document.getElementById('unitesContainer');
-    const unitesDuree = unitesContainer.querySelectorAll('input[id*="unite_"][id*="_duree"]');
-    
+    const unitesDureeInputs = document.querySelectorAll(
+        '.unite-block input[id$="_duree"]'
+    );
+
     let totalHours = 0;
-    unitesDuree.forEach(input => {
-        const value = parseFloat(input.value) || 0;
-        totalHours += value;
+
+    unitesDureeInputs.forEach(input => {
+        const value = parseFloat(input.value);
+        if (!isNaN(value)) {
+            totalHours += value;
+        }
     });
-    
-    // Mettre à jour le champ durée totale
+
     const dureeTotaleInput = document.getElementById('duree');
     if (dureeTotaleInput) {
         dureeTotaleInput.value = totalHours.toFixed(2);
     }
 }
+
 
 function addModule(uniteIndex) {
     const container = document.getElementById(`modulesContainer_${uniteIndex}`);
@@ -340,5 +344,6 @@ function showResult(message, isSuccess) {
         }, 2000);
     }
 }
+
 
 
