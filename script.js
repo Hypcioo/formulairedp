@@ -54,8 +54,6 @@ document.getElementById('pedagogicalForm').addEventListener('submit', function(e
     // OPTION 1: Envoi vers une API (Make, Zapier, ou votre backend)
     sendToAPI(data);
     
-    // OPTION 2: Envoi vers Claude AI API (décommentez si besoin)
-    // sendToClaude(data);
 });
 
 // Génération de la structure des unités et modules
@@ -223,7 +221,7 @@ function removeModule(btn) {
 async function sendToAPI(data) {
     try {
         // Remplacez cette URL par votre webhook Make.com
-        const webhookURL = 'VOTRE_URL_WEBHOOK_MAKE';
+        const webhookURL = 'gnsqyh4ry548lljrvyhxbfhmfwaz1p5p@hook.eu2.make.com';
         
         const response = await fetch(webhookURL, {
             method: 'POST',
@@ -246,7 +244,7 @@ async function sendToAPI(data) {
 
 // Envoi vers Make après traitement IA
 async function sendToMake(data) {
-    const webhookURL = 'VOTRE_URL_WEBHOOK_MAKE';
+    const webhookURL = 'gnsqyh4ry548lljrvyhxbfhmfwaz1p5p@hook.eu2.make.com';
     await fetch(webhookURL, {
         method: 'POST',
         headers: {
@@ -271,4 +269,5 @@ function showResult(message, isSuccess) {
             document.getElementById('pedagogicalForm').reset();
         }, 2000);
     }
+
 }
