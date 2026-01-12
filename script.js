@@ -1,3 +1,10 @@
+// Rendre les fonctions globales pour qu'elles soient accessibles depuis le HTML
+window.generateModules = generateModules;
+window.removeUnite = removeUnite;
+window.removeModule = removeModule;
+window.addModule = addModule;
+window.calculateUniteDuration = calculateUniteDuration;
+
 document.getElementById('pedagogicalForm').addEventListener('submit', function(e) {
     e.preventDefault();
     
@@ -56,6 +63,8 @@ document.getElementById('pedagogicalForm').addEventListener('submit', function(e
     // OPTION 1: Envoi vers une API (Make, Zapier, ou votre backend)
     sendToAPI(data);
     
+    // OPTION 2: Envoi vers Claude AI API (décommentez si besoin)
+    // sendToClaude(data);
 });
 
 // Génération de la structure des unités et modules
