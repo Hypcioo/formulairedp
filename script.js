@@ -124,7 +124,6 @@ function createUnite(uniteIndex, container) {
             <div class="form-group">
                 <label for="unite_${uniteIndex}_duree">Durée de l'unité (en heures)</label>
                 <input <input type="number" id="unite_${uniteIndex}_duree" name="unite_${uniteIndex}_duree" data-type="unite-duree" min="0" step="0.01" readonly style="background-color: #f0f0f0; cursor: not-allowed;" value="0"/>
->
                 <div class="help-text">Calculée automatiquement</div>
             </div>
         </div>
@@ -345,6 +344,7 @@ function showResult(message, isSuccess) {
         }, 2000);
     }
 }
+
 
 
 
