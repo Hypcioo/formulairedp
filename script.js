@@ -240,18 +240,18 @@ function calculateTotalDuration() {
         'input[data-type="unite-duree"]'
     );
 
-    let totalHours = 0;
+    let totalMinutes = 0;
 
     uniteDureeInputs.forEach(input => {
-        const value = parseFloat(input.value);
+        const value = parseInt(input.value, 10);
         if (!isNaN(value)) {
-            totalHours += value;
+            totalMinutes += value;
         }
     });
 
     const dureeTotaleInput = document.getElementById('duree');
     if (dureeTotaleInput) {
-        dureeTotaleInput.value = totalHours.toFixed(2);
+        dureeTotaleInput.value = totalMinutes;
     }
 }
 
@@ -345,6 +345,7 @@ function showResult(message, isSuccess) {
         }, 2000);
     }
 }
+
 
 
 
