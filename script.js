@@ -287,7 +287,7 @@ function removeModule(btn, uniteIndex) {
 async function sendToAPI(data) {
     try {
         // Remplacez cette URL par votre webhook Make.com
-        const webhookURL = 'https://hook.eu2.make.com/neigsfankcqam0rtz7qogp1wf0qmbt1f';
+        const webhookURL = 'https://hook.eu2.make.com/qabw13gv5qhlko4s3l3bvwq9xxueoet5';
         
         console.log('📤 Envoi des données vers:', webhookURL);
         console.log('📦 Données envoyées:', data);
@@ -319,7 +319,7 @@ async function sendToAPI(data) {
 
 // Envoi vers Make après traitement IA
 async function sendToMake(data) {
-    const webhookURL = 'https://hook.eu2.make.com/neigsfankcqam0rtz7qogp1wf0qmbt1f';
+    const webhookURL = 'https://hook.eu2.make.com/qabw13gv5qhlko4s3l3bvwq9xxueoet5';
     await fetch(webhookURL, {
         method: 'POST',
         headers: {
@@ -345,6 +345,7 @@ function showResult(message, isSuccess) {
         }, 2000);
     }
 }
+
 
 
 
